@@ -10,15 +10,24 @@ keys:
     - ~/.ssh/id_rsa
 
 folders:
-    - map: ~/code
-      to: /home/vagrant/code
+    - map: ~/sites
+      to: /home/vagrant/sites
 
 sites:
-    - map: homestead.app
-      to: /home/vagrant/code/public
+    - map: standardpro.dev
+      to: /home/vagrant/sites/standard
+    - map: standardnet.dev
+      to: /home/vagrant/sites/standard
+    - map: shaktigym.dev
+      to: /home/vagrant/sites/shaktigym
+    - map: cultmtl.dev
+      to: /home/vagrant/sites/cultmtl
 
 databases:
-    - homestead
+    - standardpro
+    - standardnet
+    - shaktigym
+    - cultmtl
 
 # blackfire:
 #     - id: foo
