@@ -16,6 +16,11 @@ folders:
 sites:
     - map: standardpro.dev
       to: /home/vagrant/sites/standard
+      composer: yes
+      node: yes
+      wordpress: yes
+      wpengine uploads: user, pass
+      wpengine: thingy
     - map: standardnet.dev
       to: /home/vagrant/sites/standard
     - map: shaktigym.dev
