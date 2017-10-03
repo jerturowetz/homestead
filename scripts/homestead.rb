@@ -230,6 +230,7 @@ class Homestead
                     end
                 end
             end
+
         end
 
         config.vm.provision "shell" do |s|
@@ -344,5 +345,9 @@ class Homestead
                 ]
             end
         end
+
+        require File.expand_path(File.dirname(__FILE__) + '/homestead-extra.rb')
+        HomesteadExtra.run(config,settings)
+
     end
 end
