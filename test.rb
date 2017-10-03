@@ -22,7 +22,7 @@ if settings.include? 'sites'
     #look for node
     #look for wpengine-db
     #look for wpengine-sftp
-    pp settings["sites"].map()
+    pp settings["sites"].map
     # pp set
     # set = settings["sites"]
     # pp set
