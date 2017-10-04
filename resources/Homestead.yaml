@@ -16,15 +16,25 @@ sites:
     - map: standardpro.dev
       to: /home/vagrant/sites/standard
       type: wordpress
-      composer: yes
-      node: yes
+      run-local-scripts:
+          - path: ~/sites/standard/
+            command: composer install
+          - path: ~/sites/standard/
+            command: yarn install
+      
       wpengine-db:
-          - dbname: user
-            dbpass: pass
+          dbname: user
+          dbpass: pass
+
       wpengine-sftp:
-          - user: username
-            pass: password
-            uploads-folder: /wp-content/uploads
+          user: username
+          pass: password
+          uploads-folder: /wp-content/uploads
+
+      aws-s3-sync:
+          user: username
+          pass: password
+          uploads-folder: /wp-content/uploads
 
     - map: shaktigym.dev
       to: /home/vagrant/sites/shaktigym
