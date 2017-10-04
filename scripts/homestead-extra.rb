@@ -1,20 +1,34 @@
 class HomesteadExtra
     def HomesteadExtra.run(config,settings)
 
-        if settings.include? 'sites'
-            if h = settings["sites"].find { |h| h['type'] == 'wordpress' }
-                p "Has wordpress"
-            else
-                p "no wordpress"
-            end            
-        end
-
-
         ## to do
-        
+        ## install wp-cli
         ## clone db
         ## clean db
         ## copy uploads
+
+        scriptDir = File.dirname(__FILE__)
+
+        if settings.include? 'sites'
+
+            # Flattens the array and checks if a key exists - no use yet
+            allKeys = settings["sites"].reduce({}, :update)
+            if allKeys.include? 'aws-s3-sync'
+                config.vm.provision "shell" do |s|
+                    s.name = "installing AWS CLI"
+                    s.path = scriptDir + "/install-awscli.sh"
+                end
+            end
+
+            if h = settings["sites"].find { |h| h['type'] == 'wordpress' }
+                config.vm.provision "shell" do |s|
+                    s.name = "installing WP CLI"
+                    s.path = scriptDir + "/install-wpcli.sh"
+                end
+            end
+
+        end
+
 =begin
 
         if settings.include? 'sites'

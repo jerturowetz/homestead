@@ -2,11 +2,13 @@
 
 # Check if aws command exists
 awsexists() {
-    if hash aws 2>/dev/null;
+    if hash aws 2>/dev/null
     then
-        return 0 # 0 = true
-    else
+        echo "status of aws false"
         return 1 # 1 = false
+    else
+        echo "status of aws true"
+        return 0 # 0 = true
     fi
 }
 
@@ -14,17 +16,13 @@ awsexists() {
 awscli() {
     if awsexists
     then
-        noroot pip install awscli --upgrade --user
+        echo "this one"
+        pip install awscli --upgrade --user
     else
-        noroot pip install awscli --upgrade --user
+        echo "tat one"
+        pip install awscli --upgrade --user
         complete -C aws_completer aws
     fi
 }
 
-
-# make an uploads folder if it doesn't exist
-#if [ ! -d "${SITE_PATH}/wp-content/uploads" ]; then
-#	mkdir "${SITE_PATH}/wp-content/uploads"
-#fi
-
-#cd "${SITE_PATH}/wp-content/"
+awscli
