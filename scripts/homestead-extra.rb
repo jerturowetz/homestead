@@ -7,17 +7,17 @@ class HomesteadExtra
 
             allKeys = settings["sites"].reduce({}, :update) # flattens array
             if allKeys.include? 'aws-s3-sync'
-                config.vm.provision "shell" do |s|
-                    s.name = "installing AWS CLI"
-                    s.path = scriptDir + "/install-awscli.sh"
-                end
+                #config.vm.provision "shell" do |s|
+                #    s.name = "installing AWS CLI"
+                #    s.path = scriptDir + "/install-awscli.sh"
+                #end
             end
 
             if h = settings["sites"].find { |h| h['type'] == 'wordpress' }
-                config.vm.provision "shell" do |s|
-                    s.name = "installing WP CLI"
-                    s.path = scriptDir + "/install-wpcli.sh"
-                end
+                #config.vm.provision "shell" do |s|
+                #    s.name = "installing WP CLI"
+                #    s.path = scriptDir + "/install-wpcli.sh"
+                #end
             end
 
             settings["sites"].each do |site|
