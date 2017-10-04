@@ -251,7 +251,7 @@ class Homestead
                 s.path = scriptDir + "/install-mongo.sh"
             end
         end
-
+=begin
         # Install CouchDB If Necessary
         if settings.has_key?("couchdb") && settings["couchdb"]
             config.vm.provision "shell" do |s|
@@ -345,7 +345,7 @@ class Homestead
                 ]
             end
         end
-
+=end
         require File.expand_path(File.dirname(__FILE__) + '/homestead-extra.rb')
         HomesteadExtra.run(config,settings)
 

@@ -1,18 +1,11 @@
 class HomesteadExtra
     def HomesteadExtra.run(config,settings)
 
-        ## to do
-        ## install wp-cli
-        ## clone db
-        ## clean db
-        ## copy uploads
-
         scriptDir = File.dirname(__FILE__)
 
         if settings.include? 'sites'
 
-            # Flattens the array and checks if a key exists - no use yet
-            allKeys = settings["sites"].reduce({}, :update)
+            allKeys = settings["sites"].reduce({}, :update) # flattens array
             if allKeys.include? 'aws-s3-sync'
                 config.vm.provision "shell" do |s|
                     s.name = "installing AWS CLI"
@@ -27,52 +20,79 @@ class HomesteadExtra
                 end
             end
 
+            settings["sites"].each do |site|
+
+                if site.include? 'run-local-scripts'
+                    site["run-local-scripts"].each do |script|
+
+                        if script["path"] && script["command"]
+                            config.trigger.before :up do
+                                run "bash #{scriptDir}/run-local-script.sh '" + script["path"] + "' '" + script["command"] + "'"
+                            end
+                        end
+
+                    end
+                end
+
+                config.trigger.before :up do
+                    run "exit"
+                end
+
+            end
+
         end
+    end
+end
+
 
 =begin
 
-        if settings.include? 'sites'
+// TO DO:
+generate wp-config
+npm & composer install ?
+clone db
+clean db
+wpengine copy
+aws copy
+                
 
-            # Flattens the array and checks if a key exists - no use yet
-            #allKeys = settings["sites"].reduce({}, :update)
-            #if allKeys.include? 'composer'
-            #    pp "has composer"
-            #end
-        
-            config.vm.provision "shell" do |s|
-                s.name = "testing additions"
-                s.inline = "pwd"
-                # s.args = [site["map"].tr('^A-Za-z0-9', '')]
-            end
+if site["type"] == 'wordpress'
+    # install wordpress
 
+    s.name = "Installing Wordpress for" + site["map"]
+
+    if site.include? 'params'
+        params = "("
+        site["params"].each do |param|
+            params += " [" + param["key"] + "]=" + param["value"]
         end
-
-        if settings.include? 'sites'
-            settings["sites"].each do |site|
-
-                if (site.has_key?("wpengine-db"))
-                    # pp "has wpengine-db"
-                    pp site["wpengine-db"]
-                end
-
-                if (site.has_key?("wpengine-sftp"))
-                    pp site["wpengine-sftp"]
-                end
-
-                if (site.has_key?("aws-uploads"))
-                    pp site["aws-uploads"]
-                end
-
-                if site.include? 'composer'
-                    pp "has composer"
-                end
-            
-                if site.include? 'node'
-                    pp "has node"
-                end
-
-            end
-        end
-=end
+        params += " )"
     end
+
+    s.path = scriptDir + "/install-wordpress.sh"
+
+    s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443", site["php"] ||= "7.1", params ||= ""]
+
 end
+
+
+
+if (site.has_key?("wpengine-db"))
+    p site["wpengine-db"]
+    # pass args
+end
+
+if (site.has_key?("wpengine-sftp"))
+    p site["wpengine-sftp"]
+    # pass args
+end
+
+if (site.has_key?("aws-uploads"))
+    p site["aws-uploads"]
+    # export vars & pas args
+    # pass args
+end
+
+
+
+=end
