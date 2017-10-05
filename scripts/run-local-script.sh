@@ -9,4 +9,3 @@ fi
 
 cd ${1}
 ${2}
-echo "all done"

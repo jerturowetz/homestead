@@ -1,63 +1,15 @@
 #!/bin/bash
 
-# execute something as vagrant user
-noroot() {
-  sudo -EH -u "vagrant" "$@";
-}
+# Global parameter defaults
+path: wordpress/
+url: http://standardpro.dev
 
-# Update apt-get
-echo "Updating apt-get"
-sudo DEBIAN_FRONTEND=noninteractive apt-get --assume-yes update
-
-# Install phpX.X-ldap
-echo "Installing phpX.X-ldap (matches current php version)"
-PHPVersion=$(php --version | head -n 1 | cut -d " " -f 2 | cut -c 1,2,3);
-sudo DEBIAN_FRONTEND=noninteractive apt-get --assume-yes install php${PHPVersion}-ldap
-
-
-## Local Variables
-LOCAL_SITE_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-LOCAL_SCRIPTS_PATH="${LOCAL_SITE_PATH}/provision-scripts/host-machine"
-
-# execute as vagrant user
-noroot() {
-  sudo -EH -u "vagrant" "$@";
-}
-
-# Need to somehow get these from host machine
-# REMOTE_SITE_PATH="/home/vagrant/sites/standard"
-# REMOTE_SCRIPTS_PATH="${REMOTE_SITE_PATH}/provision-scripts/guest-machine"
-# SITE_DB_NAME="standardpro"
-# SITE_URL="http://standardpro.dev"
-# WP_DIR="wordpress"
-
-# Update apt-get
-echo "Updating apt-get"
-sudo DEBIAN_FRONTEND=noninteractive apt-get --assume-yes update
-
-# Install php${PHPVersion}-ldap
-PHPVersion=$(php --version | head -n 1 | cut -d " " -f 2 | cut -c 1,2,3);
-echo "Installing php${PHPVersion}-ldap (matches current php version)"
-sudo DEBIAN_FRONTEND=noninteractive apt-get --assume-yes install php${PHPVersion}-ldap
-
-# Download the latest stable version of WordPress
-if [[ ! -f "${WP_PATH}/wp-load.php" ]]; then
-
-	if [[ ! -d "${WP_PATH}" ]]; then
-		mkdir "${WP_PATH}"
-	else
-		rm -rf "${WP_PATH}"
-		mkdir "${WP_PATH}"
-	fi
-
-    cd "${WP_PATH}"
-	noroot wp core download --version="latest"
-
-fi
-
-# create the wp-config.php file (relies on infor in wp-cli.yml)
-cd "${SITE_DIR}"
-noroot wp config create --force
+core install:
+    url: 'http://standardpro.dev'
+    title: 'STANDARD Products'
+    admin_user: TempUser
+    admin_email: TempEmail@domain.com
+    admin_password: TempPass
 
 # Import remote db
 echo "Copy remote database to dump file"
@@ -73,7 +25,7 @@ rm dump.sql
 
 # Update WP version if possible
 echo "update wordpress core to latest version"
-noroot wp core update --version="latest"
+wp core update --version="latest"
 
 # Update the site url for wordpress in a sub folder
 echo "Running search and replace on old urls to local dev urls"
@@ -82,14 +34,6 @@ wp search-replace 'http://www.standardpro.com' 'http://standardpro.dev' --format
 wp search-replace 'http://standardpro.staging.wpengine.com' 'http://standardpro.dev' --format=count
 wp option update home 'http://standardpro.dev'
 wp option update siteurl 'http://standardpro.dev/wordpress'
-
-# move config to root
-cd "${SITE_DIR}"
-mv "${WP_DIR}/wp-config.php" "${SITE_DIR}/wp-config.php"
-
-# Copy (not move) index.php file to root and edit to point to correct path of wp-blog-header.php
-cp "${WP_DIR}/index.php" "${SITE_DIR}/index.php"
-sed -i "s/\/wp-blog-header/\/${WP_DIR}\/wp-blog-header/g" "${SITE_DIR}/index.php"
 
 # Clone Jer's plugins repo
 if [[ ! -f "${SITE_DIR}/wp-content/plugins/index.php" ]]; then
@@ -134,7 +78,6 @@ wp rewrite flush
 #lftp -e 'mirror uploads test --parallel=10 --ignore-time --no-perms;quit' -u standardpro-provision,M8!b6lliPG!Uf6 -p 2222 sftp://standardpro.sftp.wpengine.com --dry-run
 #echo -e "\033[0;31mThere is currently no way to copy of the WP Engine hosted uploads folder without a password - do this manually\033[0m"
 # sudo apt install sshpass
-#then we can scp ?
 # sshpass
 # echo "Copying the standardpro WP Engine uploads folder - this might take a while, please be patient"
 # lftp -e 'mirror uploads test --parallel=10 --ignore-time --no-perms;quit' -u standardpro-provision,M8!b6lliPG!Uf6 -p 2222 sftp://standardpro.sftp.wpengine.com --dry-run

@@ -16,20 +16,22 @@ sites:
     - map: standardpro.dev
       to: /home/vagrant/sites/standard
       type: wordpress
+      dbname: standardpro
+
       run-local-scripts:
           - path: ~/sites/standard/
             command: composer install
           - path: ~/sites/standard/
             command: yarn install
       
-      wpengine-db:
+      wpengine-db-copy:
           dbname: user
           dbpass: pass
 
-      wpengine-sftp:
-          user: username
-          pass: password
-          uploads-folder: /wp-content/uploads
+      wpengine-uploads-copy:
+          sftpuser: username
+          sftppass: password
+          sftpfolder: /wp-content/uploads
 
       aws-s3-sync:
           user: username
