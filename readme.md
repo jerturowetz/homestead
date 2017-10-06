@@ -30,3 +30,7 @@ to-do
 ## Contributors
 
 to-do
+
+## Notes
+
+sftp & aws & db passwords cannot contain bangs or special chars
