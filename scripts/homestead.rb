@@ -192,10 +192,6 @@ class Homestead
                     type = "symfony2"
                 end
 
-                if (type == "wordpress")
-                    type = "laravel"
-                end
-
                 config.vm.provision "shell" do |s|
                     s.name = "Creating Site: " + site["map"]
                     if site.include? 'params'
