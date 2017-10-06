@@ -4,13 +4,18 @@ This project attempts to address issues of stability on Windows 10 with Vagrants
 
 ## About Homestead
 
-From Homesteads official `readme.md`:
+Because Homestead is so awesome already, this project doesn't mean to improve upon it. From Homesteads official `readme.md`:
 
 > Homestead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.1, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing Laravel applications.
 
-This project doesn't mean to improve upon homestead and, as such, intends to continue to steal code from releases.
+To learn how homestead works & for all homestead related issues, you should check out the [official docs](https://laravel.com/docs/homestead).
 
-To learn how homestead works you should check out the [official docs](https://laravel.com/docs/homestead).
+## About WP-Homestead
+
+### Differences from homestead:
+json default scripts removed for simplicity
+tests removed
+
 
 ## Requirements
 
