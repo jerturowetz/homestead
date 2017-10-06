@@ -1,16 +1,27 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-homestead.svg"></p>
+# WP-Homestead
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/homestead"><img src="https://travis-ci.org/laravel/homestead.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/homestead"><img src="https://poser.pugx.org/laravel/homestead/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/homestead"><img src="https://poser.pugx.org/laravel/homestead/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/homestead"><img src="https://poser.pugx.org/laravel/homestead/license.svg" alt="License"></a>
-</p>
+This project attempts to address issues of stability on Windows 10 with Vagrants built for Wordpress developers. It's nothing more than a few extra provisioning scripts built on top of Laravel's very stable and beautifully performant Vagrant [_Homestead_](https://laravel.com/docs/homestead).
 
-## Introduction
+## About Homestead
 
-Laravel Homestead is an official, pre-packaged Vagrant box that provides you a wonderful development environment without requiring you to install PHP, a web server, and any other server software on your local machine. No more worrying about messing up your operating system! Vagrant boxes are completely disposable. If something goes wrong, you can destroy and re-create the box in minutes!
+From Homesteads official `readme.md`:
 
-Homestead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.1, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing Laravel applications.
+> Homestead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.1, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing Laravel applications.
 
-Official documentation [is located here](https://laravel.com/docs/homestead).
+This project doesn't mean to improve upon homestead and, as such, intends to continue to steal code from releases.
+
+To learn how homestead works you should check out the [official docs](https://laravel.com/docs/homestead).
+
+## Requirements
+
+You should have a fair understanding of vagrant (booted machines), homestead (booted homestead) and...
+
+to-do
+
+## Quick start
+
+to-do
+
+## Contributors
+
+to-do
