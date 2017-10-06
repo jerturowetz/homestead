@@ -12,38 +12,6 @@ folders:
     - map: ~/sites
       to: /home/vagrant/sites
 
-sites:
-    - map: standardpro.dev
-      to: /home/vagrant/sites/standard
-      type: wordpress
-      dbname: standardpro
-
-      run-local-scripts:
-          - path: ~/sites/standard/
-            command: composer install
-          - path: ~/sites/standard/
-            command: yarn install
-      
-      wpengine-db-copy:
-          dbname: user
-          dbpass: pass
-
-      wpengine-uploads-copy:
-          sftpuser: username
-          sftppass: password
-          sftpfolder: /wp-content/uploads
-
-      aws-s3-sync:
-          user: username
-          pass: password
-          uploads-folder: /wp-content/uploads
-
-    - map: shaktigym.dev
-      to: /home/vagrant/sites/shaktigym
-      
-    - map: cultmtl.dev
-      to: /home/vagrant/sites/cultmtl
-
 databases:
     - standardpro
     - shaktigym
@@ -62,3 +30,36 @@ databases:
 #     - send: 7777
 #       to: 777
 #       protocol: udp
+
+sites:
+    - map: standardpro.dev
+      to: /home/vagrant/sites/standard
+      db: HomesteadDBToOverwriteMustMatchDBAbove
+
+      run-local-script:
+          - local-path: ~/sites/standard/
+            command: composer install
+          - local-path: ~/sites/standard/
+            command: yarn install
+      
+      wordpress:
+          install-to-folder: wordpress
+
+      wpengine-copy-db:
+          install-name: wpengineinstallname
+          dbpass: examplepass
+          local-url: http://whatever.dev
+          remote-url: http://www.whatever.com
+
+      wpengine-copy-uploads-folder:
+          sftpuser: username
+          sftppass: password
+          sftpfolder: /wp-content/uploads
+
+      aws-s3-sync:
+          user: username
+          pass: password
+          uploads-folder: /wp-content/uploads
+
+    - map: anothersite.dev
+      to: /home/vagrant/sites/anothersitefolder
