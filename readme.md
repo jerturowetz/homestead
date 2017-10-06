@@ -13,9 +13,9 @@ To learn how homestead works & for all homestead related issues, you should chec
 ## About WP-Homestead
 
 ### Differences from homestead:
+
 json default scripts removed for simplicity
 tests removed
-
 
 ## Requirements
 
@@ -34,3 +34,8 @@ to-do
 ## Notes
 
 sftp & aws & db passwords cannot contain bangs or special chars
+
+## ToDo
+
+finish aws s3 copy
+finish wp set permissions
