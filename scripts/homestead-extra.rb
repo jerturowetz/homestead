@@ -82,16 +82,21 @@ class HomesteadExtra
                         s.args = [localSiteFolder]
                     end
 
-                    #if site.include? 'wpengine-copy-uploads-folder'
-                    #    config.vm.provision "shell" do |s|
-                    #        s.name = "Updating Wordpress core " + site["map"]                        
-                    #        s.privileged = false
-                    #        s.path = scriptDir + "/wpengine-copy-uploads-folder.sh"
-                    #        s.args = [localSiteFolder]
-                    #    end
-                    #end
+                    if site.include? 'wpengine-copy-uploads-folder'
 
-                    #aws-s3-sync:
+                        sftpServer = site['wpengine-copy-uploads-folder']['sftpaddress']
+                        sftpUser = site['wpengine-copy-uploads-folder']['sftpuser']
+                        sftpPass = site['wpengine-copy-uploads-folder']['sftppass']
+
+                        config.vm.provision "shell" do |s|
+                            s.name = "Updating Wordpress core " + site["map"]                        
+                            s.privileged = false
+                            s.path = scriptDir + "/wpengine-copy-uploads-folder.sh"
+                            s.args = [localSiteFolder, sftpServer, sftpUser, sftpPass]
+                        end
+                    end
+
+                    # aws-s3-copy
                     #user: username
                     #pass: password
                     #uploads-folder: /wp-content/uploads
