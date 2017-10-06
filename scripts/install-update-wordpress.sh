@@ -47,3 +47,8 @@ PHP
     sed -i "s/\/wp-blog-header/\/${WP_FOLDER_NAME}\/wp-blog-header/g" "${SITE_DIR}/index.php"
 
 fi
+
+# Update WP version if possible
+echo "update wordpress core to latest version"
+cd "${SITE_DIR}"
+wp core update --version="latest" --path="${WP_FOLDER_NAME}/"

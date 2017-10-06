@@ -11,30 +11,6 @@ core install:
     admin_email: TempEmail@domain.com
     admin_password: TempPass
 
-# Import remote db
-echo "Copy remote database to dump file"
-mysqldump -u standardpro -p5RytVxO3ByHhIcPg -h standardpro.wpengine.com wp_standardpro > dump.sql
-echo "Drop local database"
-mysqladmin -u homestead -psecret drop standardpro -f
-echo "Create empty local database"
-mysqladmin -u homestead -psecret create standardpro
-echo "Import dumpfile to new database"
-mysql -u homestead -psecret standardpro < dump.sql
-echo "remove dump file"
-rm dump.sql
-
-# Update WP version if possible
-echo "update wordpress core to latest version"
-wp core update --version="latest"
-
-# Update the site url for wordpress in a sub folder
-echo "Running search and replace on old urls to local dev urls"
-wp search-replace 'http://standardpro.com' 'http://standardpro.dev' --format=count
-wp search-replace 'http://www.standardpro.com' 'http://standardpro.dev' --format=count
-wp search-replace 'http://standardpro.staging.wpengine.com' 'http://standardpro.dev' --format=count
-wp option update home 'http://standardpro.dev'
-wp option update siteurl 'http://standardpro.dev/wordpress'
-
 # Clone Jer's plugins repo
 if [[ ! -f "${SITE_DIR}/wp-content/plugins/index.php" ]]; then
     echo "Cloning Jer's plugins repo"

@@ -36,29 +36,38 @@ class HomesteadExtra
 
                     siteFolder = site['to']
                     dbName = site['dbname']
-                    siteURL = site['map']
+                    localURL = site['map']
                     wpFolderName = 'wordpress'
 
                     config.vm.provision "shell" do |s|
                         s.name = "Installing Wordpress for " + site["map"]                        
                         s.privileged = false
-                        s.path = scriptDir + "/install-wordpress.sh"
-                        s.args = [siteFolder, dbName, siteURL, wpFolderName]
+                        s.path = scriptDir + "/install-update-wordpress.sh"
+                        s.args = [siteFolder, dbName, localURL, wpFolderName]
                     end
 
                     config.vm.provision "shell" do |s|
                         s.name = "creating wp db for " + site["map"]                        
                         s.privileged = false
                         s.path = scriptDir + "/install-wordpress-db.sh"
-                        s.args = [siteFolder, dbName, siteURL, wpFolderName]
+                        s.args = [siteFolder, dbName, localURL, wpFolderName]
                     end
 
-                    if (site.has_key?("wpengine-db-copy"))
+                    if (site.has_key?("wpengine"))
                         config.vm.provision "shell" do |s|
-                            s.name = "copying wpengine db for " + site["map"]                        
-                            s.privileged = false
-                            s.path = scriptDir + "/wpengine-db-copy.sh"
-                            s.args = [siteFolder, dbName, siteURL, wpFolderName]
+
+                            localDBName = site["dbname"]
+                            WPEngineInstallName = site["wpengine"]["install-name"]
+                            remoteDBPass = site["wpengine"]["dbpass"]
+                            remoteURL = site["wpengine"]["remote-url"]
+
+                            if ( localDBName && WPEngineInstallName && remoteDBPass )
+                                s.name = "Runnin WPEngine db copy for " + site["map"]                        
+                                s.privileged = false
+                                s.path = scriptDir + "/wpengine-db-copy.sh"
+                                s.args = [localDBName, WPEngineInstallName, remoteDBPass, localURL, remoteURL]
+                            end
+
                         end
                     end
 
