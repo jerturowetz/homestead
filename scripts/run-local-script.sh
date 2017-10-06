@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-#argument count
 if [ ${#} != 2 ]
 then
     echo "${#} arguments supplied, expecting 2 arguments"

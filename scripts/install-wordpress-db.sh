@@ -3,7 +3,7 @@
 SITE_DIR=${1}
 DB_NAME=${2}
 SITE_URL=${3}
-WP_FOLDER_NAME=${4}
+WP_FOLDER_NAME="wordpress"
 
 WP_DIR="${SITE_DIR}/${WP_FOLDER_NAME}"
 

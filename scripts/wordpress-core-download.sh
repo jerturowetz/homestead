@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-SITE_DIR=${1}
-DB_NAME=${2}
-SITE_URL=${3}
-WP_FOLDER_NAME=${4}
+SITE_DIR="${1}"
+DB_NAME="${2}"
+SITE_URL="${3}"
+WP_FOLDER_NAME="${4}"
 
 WP_DIR="${SITE_DIR}/${WP_FOLDER_NAME}"
 
@@ -48,7 +48,3 @@ PHP
 
 fi
 
-# Update WP version if possible
-echo "update wordpress core to latest version"
-cd "${SITE_DIR}"
-wp core update --version="latest" --path="${WP_FOLDER_NAME}/"

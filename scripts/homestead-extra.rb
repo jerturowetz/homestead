@@ -1,75 +1,106 @@
 class HomesteadExtra
     def HomesteadExtra.run(config,settings)
-
+        
         scriptDir = File.dirname(__FILE__)
 
         if settings.include? 'sites'
 
             allKeys = settings["sites"].reduce({}, :update) # flattens array
+
             if allKeys.include? 'aws-s3-sync'
-                #config.vm.provision "shell" do |s|
-                    #s.name = "installing AWS CLI"
-                    #s.path = scriptDir + "/install-awscli.sh"
-                #end
+                config.vm.provision "shell" do |s|
+                    s.name = "Install/update AWS CLI"
+                    s.path = scriptDir + "/install-awscli.sh"
+                end
             end
 
-            if h = settings["sites"].find { |h| h['type'] == 'wordpress' }
+            if allKeys.include? 'wordpress'
                 config.vm.provision "shell" do |s|
-                    s.name = "installing WP CLI"
+                    s.name = "Install/update WP CLI"
                     s.path = scriptDir + "/install-wpcli.sh"
                 end
             end
 
             settings["sites"].each do |site|
 
-                if site.include? 'run-local-scripts'
-                    site["run-local-scripts"].each do |script|
-                        if script["path"] && script["command"]
+                if site.include? 'run-local-script'
+                    site["run-local-script"].each do |script|
+                        if script["local-path"] && script["command"]
                             config.trigger.before :up do
-                                run "bash #{scriptDir}/run-local-script.sh '" + script["path"] + "' '" + script["command"] + "'"
+                                run "bash #{scriptDir}/run-local-script.sh '" + script["local-path"] + "' '" + script["command"] + "'"
                             end
                         end
                     end
                 end
 
-                if site["type"] == 'wordpress'
+                if site.include? 'wordpress'
 
-                    siteFolder = site['to']
-                    dbName = site['dbname']
-                    localURL = site['map']
-                    wpFolderName = 'wordpress'
+                    localSiteFolder = site['to']
+                    localDBName = site["db"]
+                    wpSettings= site["wordpress"]
 
-                    config.vm.provision "shell" do |s|
-                        s.name = "Installing Wordpress for " + site["map"]                        
-                        s.privileged = false
-                        s.path = scriptDir + "/install-update-wordpress.sh"
-                        s.args = [siteFolder, dbName, localURL, wpFolderName]
-                    end
-
-                    config.vm.provision "shell" do |s|
-                        s.name = "creating wp db for " + site["map"]                        
-                        s.privileged = false
-                        s.path = scriptDir + "/install-wordpress-db.sh"
-                        s.args = [siteFolder, dbName, localURL, wpFolderName]
-                    end
-
-                    if (site.has_key?("wpengine"))
+                    if wpSettings.include? 'install-to-folder'
                         config.vm.provision "shell" do |s|
-
-                            localDBName = site["dbname"]
-                            WPEngineInstallName = site["wpengine"]["install-name"]
-                            remoteDBPass = site["wpengine"]["dbpass"]
-                            remoteURL = site["wpengine"]["remote-url"]
-
-                            if ( localDBName && WPEngineInstallName && remoteDBPass )
-                                s.name = "Runnin WPEngine db copy for " + site["map"]                        
-                                s.privileged = false
-                                s.path = scriptDir + "/wpengine-db-copy.sh"
-                                s.args = [localDBName, WPEngineInstallName, remoteDBPass, localURL, remoteURL]
-                            end
-
+                            s.name = "Installing Wordpress if necesssary " + site["map"]                        
+                            s.privileged = false
+                            s.path = scriptDir + "/wordpress-core-download.sh"
+                            s.args = [localSiteFolder, localDBName, site['map'], wpSettings["install-to-folder"]]
                         end
                     end
+
+                    if site.include? 'wpengine-copy-db'
+
+                        # there's like 0 cleanup on the url if someone accidentally forgets http:// it'll be an issue during search & replace
+                        wpEngineInstallName = site['wpengine-copy-db']['install-name']
+                        remoteDBPass = site['wpengine-copy-db']['dbpass']
+                        replaceURL = site['wpengine-copy-db']['local-url']
+                        withURL = site['wpengine-copy-db']['remote-url']
+
+                        config.vm.provision "shell" do |s|
+                            s.name = "Attemtping to copying DB from production install"
+                            s.privileged = false
+                            s.path = scriptDir + "/wpengine-copy-db.sh"
+                            s.args = [localSiteFolder, localDBName, replaceURL, withURL, wpEngineInstallName, remoteDBPass, wpSettings["install-to-folder"]]
+                        end
+
+                    else
+
+                        config.vm.provision "shell" do |s|
+                            s.name = "Creating clean Wordpress DB " + site["map"]                        
+                            s.privileged = false
+                            s.path = scriptDir + "/wordpress-db-fresh.sh"
+                            s.args = [localSiteFolder, site['map'], wpSettings["install-to-folder"]]
+                        end
+
+                    end
+
+                    # This will break if no db - which is (sorta) good as that means neither of the DB actions above fired correctly
+                    config.vm.provision "shell" do |s|
+                        s.name = "Updating Wordpress core " + site["map"]                        
+                        s.privileged = false
+                        s.path = scriptDir + "/wordpress-core-update.sh"
+                        s.args = [localSiteFolder]
+                    end
+
+                    #if site.include? 'wpengine-copy-uploads-folder'
+                    #    config.vm.provision "shell" do |s|
+                    #        s.name = "Updating Wordpress core " + site["map"]                        
+                    #        s.privileged = false
+                    #        s.path = scriptDir + "/wpengine-copy-uploads-folder.sh"
+                    #        s.args = [localSiteFolder]
+                    #    end
+                    #end
+
+                    #aws-s3-sync:
+                    #user: username
+                    #pass: password
+                    #uploads-folder: /wp-content/uploads
+
+                    #config.vm.provision "shell" do |s|
+                    #    s.name = "Setting file & folder permissions"
+                    #    s.path = scriptDir + "/wordpress-set-permissions.sh"
+                    #    s.args = [localSiteFolder, wpSettings["install-to-folder"]]
+                    #end
 
                 end
 
@@ -77,18 +108,3 @@ class HomesteadExtra
         end
     end
 end
-
-=begin
-
-if (site.has_key?("wpengine-sftp"))
-    p site["wpengine-sftp"]
-    # pass args
-end
-
-if (site.has_key?("aws-uploads"))
-    p site["aws-uploads"]
-    # export vars & pas args
-    # pass args
-end
-
-=end
