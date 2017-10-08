@@ -7,9 +7,10 @@ class HomesteadExtra
 
             allKeys = settings["sites"].reduce({}, :update) # flattens array
 
-            if allKeys.include? 'aws-s3-sync'
+            if allKeys.include? 'aws-s3-copy'
                 config.vm.provision "shell" do |s|
                     s.name = "Install/update AWS CLI"
+                    s.privileged = false
                     s.path = scriptDir + "/install-awscli.sh"
                 end
             end
@@ -36,45 +37,44 @@ class HomesteadExtra
                 if site.include? 'wordpress'
 
                     localSiteFolder = site['to']
-                    localDBName = site["db"]
-                    wpSettings= site["wordpress"]
+                    localDBName = site['db']
+                    localSiteURL = site['map']
+                    wpSettings = site['wordpress']
 
                     if wpSettings.include? 'install-to-folder'
                         config.vm.provision "shell" do |s|
-                            s.name = "Installing Wordpress if necesssary " + site["map"]                        
+                            s.name = "Downloading wordpress core for " + site["map"]
                             s.privileged = false
                             s.path = scriptDir + "/wordpress-core-download.sh"
                             s.args = [localSiteFolder, localDBName, site['map'], wpSettings["install-to-folder"]]
                         end
                     end
 
-                    if site.include? 'wpengine-copy-db'
+                    wpEngineInstallName = site.has_key?("wpengine-db-copy") ? site['wpengine-db-copy']['install-name'] : nil
+                    remoteDBPass = site.has_key?("wpengine-db-copy") ? site['wpengine-db-copy']['dbpass'] : nil
 
-                        # there's like 0 cleanup on the url if someone accidentally forgets http:// it'll be an issue during search & replace
-                        wpEngineInstallName = site['wpengine-copy-db']['install-name']
-                        remoteDBPass = site['wpengine-copy-db']['dbpass']
-                        replaceURL = site['wpengine-copy-db']['local-url']
-                        withURL = site['wpengine-copy-db']['remote-url']
-
-                        config.vm.provision "shell" do |s|
-                            s.name = "Attemtping to copying DB from production install"
-                            s.privileged = false
-                            s.path = scriptDir + "/wpengine-copy-db.sh"
-                            s.args = [localSiteFolder, localDBName, replaceURL, withURL, wpEngineInstallName, remoteDBPass, wpSettings["install-to-folder"]]
+                    config.vm.provision "shell" do |s|
+                        s.name = "Installing wordpress database"
+                        s.privileged = false
+                        s.path = scriptDir + "/wordpress-db-setup.sh"
+                        if remoteDBPass && wpEngineInstallName
+                            s.args = [localSiteFolder, localDBName, localSiteURL, wpSettings["install-to-folder"], wpEngineInstallName, remoteDBPass]
+                        else
+                            s.args = [localSiteFolder, localDBName, localSiteURL, wpSettings["install-to-folder"]]
                         end
-
-                    else
-
-                        config.vm.provision "shell" do |s|
-                            s.name = "Creating clean Wordpress DB " + site["map"]                        
-                            s.privileged = false
-                            s.path = scriptDir + "/wordpress-db-fresh.sh"
-                            s.args = [localSiteFolder, site['map'], wpSettings["install-to-folder"]]
-                        end
-
                     end
 
-                    # This will break if no db - which is (sorta) good as that means neither of the DB actions above fired correctly
+                    if site.include? 'db-search-replace'
+                        site["db-search-replace"].each do |replacetask|
+                            config.vm.provision "shell" do |s|
+                                s.name = "Running WP search and replace task"
+                                s.privileged = false
+                                s.path = scriptDir + "/wordpress-db-search-replace.sh"
+                                s.args = [localSiteFolder, replacetask['find'], replacetask['replace-with']]
+                            end
+                        end
+                    end
+
                     config.vm.provision "shell" do |s|
                         s.name = "Updating Wordpress core " + site["map"]                        
                         s.privileged = false
@@ -96,17 +96,17 @@ class HomesteadExtra
                         end
                     end
 
-                    # aws-s3-copy
-                    #user: username
-                    #pass: password
-                    #uploads-folder: /wp-content/uploads
-
-                    #config.vm.provision "shell" do |s|
-                    #    s.name = "Setting file & folder permissions"
-                    #    s.path = scriptDir + "/wordpress-set-permissions.sh"
-                    #    s.args = [localSiteFolder, wpSettings["install-to-folder"]]
-                    #end
-
+=begin
+                    if site.include? 'aws-s3-copy'
+                        awsID = site['aws-s3-copy']['id']
+                        awsSecret = site['aws-s3-copy']['secret']
+                        config.vm.provision "shell" do |s|
+                            s.name = "Copying down from AWS bucket"
+                            s.path = scriptDir + "/aws-s3-copy.sh"
+                            s.args = [localSiteFolder, awsID, awsSecret]
+                        end
+                    end
+=end
                 end
 
             end
