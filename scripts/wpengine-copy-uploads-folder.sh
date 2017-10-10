@@ -4,7 +4,7 @@ SFTP_SERVER="${2}"
 SFTP_USER="${3}"
 SFTP_PASS="${4}"
 
-LOCAL_UPLOADS_FOLDER="wp-content/test"
+LOCAL_UPLOADS_FOLDER="wp-content/uploads"
 
 # Install ssh pass
 echo "installing sshpass"

@@ -358,7 +358,7 @@ class Homestead
         end
 
         # jer's wordpress items
-        require File.expand_path(File.dirname(__FILE__) + '/homestead-extra.rb')
+        require File.expand_path(File.dirname(__FILE__) + '/homestead-wordpress.rb')
         HomesteadExtra.run(config,settings)
 
     end

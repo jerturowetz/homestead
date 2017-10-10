@@ -7,14 +7,6 @@ class HomesteadExtra
 
             allKeys = settings["sites"].reduce({}, :update) # flattens array
 
-            #if allKeys.include? 'aws-s3-copy'
-            #    config.vm.provision "shell" do |s|
-            #        s.name = "Install/update AWS CLI"
-            #        s.privileged = false
-            #        s.path = scriptDir + "/install-awscli.sh"
-            #    end
-            #end
-
             if allKeys.include? 'wordpress'
                 config.vm.provision "shell" do |s|
                     s.name = "Install/update WP CLI"
@@ -95,16 +87,6 @@ class HomesteadExtra
                             s.args = [localSiteFolder, sftpServer, sftpUser, sftpPass]
                         end
                     end
-
-                    #if site.include? 'aws-s3-copy'
-                    #    awsID = site['aws-s3-copy']['id']
-                    #    awsSecret = site['aws-s3-copy']['secret']
-                    #    config.vm.provision "shell" do |s|
-                    #        s.name = "Copying down from AWS bucket"
-                    #        s.path = scriptDir + "/aws-s3-copy.sh"
-                    #        s.args = [localSiteFolder, awsID, awsSecret]
-                    #    end
-                    #end
 
                 end
 
