@@ -13,10 +13,7 @@ folders:
       to: /home/vagrant/sites
 
 databases:
-    - standardpro
-    - shaktigym
-    - cultmtl
-    - wivacuums
+    - db name
 
 # blackfire:
 #     - id: foo
@@ -32,34 +29,32 @@ databases:
 #       protocol: udp
 
 sites:
-    - map: standardpro.dev
-      to: /home/vagrant/sites/standard
-      db: HomesteadDBToOverwriteMustMatchDBAbove
+    - map: site.dev
+      to: /home/vagrant/sites/folder
+      db: database to use from supplied databases above
 
       run-local-script:
-          - local-path: ~/sites/standard/
-            command: composer install
-          - local-path: ~/sites/standard/
-            command: yarn install
+        - local-path: ~/sites/folder
+          command: composer install
+        - local-path: ~/sites/folder
+          command: yarn install
       
       wordpress:
           install-to-folder: wordpress
 
-      wpengine-copy-db:
-          install-name: wpengineinstallname
-          dbpass: examplepass
-          local-url: http://whatever.dev
-          remote-url: http://www.whatever.com
+      wpengine-db-copy:
+          install-name: wp engine install name
+          dbpass: remote db pass
+
+      db-search-replace:
+        - find: https://www.oldurl.com
+          replace-with: http://newurl.dev
 
       wpengine-copy-uploads-folder:
-          sftpuser: username
-          sftppass: password
-          sftpfolder: /wp-content/uploads
+          sftpaddress: sftp server
+          sftpuser: sftp user
+          sftppass: sftp pass
 
-      aws-s3-sync:
-          user: username
-          pass: password
-          uploads-folder: /wp-content/uploads
-
-    - map: anothersite.dev
-      to: /home/vagrant/sites/anothersitefolder
+      aws-s3-copy:
+          id: ID here
+          secret: pass here

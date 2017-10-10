@@ -47,7 +47,7 @@ else
     wp core install --url="${SITE_URL}" --title=Homestead --admin_user=homestead --admin_password=secret --admin_email=tempemail@email.com --skip-email --path="${WP_FOLDER_NAME}/"
 fi
 
-echo "Reset home urls"
-cd "${SITE_DIR}"
-wp option update home "${SITE_URL}" --path="${WP_FOLDER_NAME}/"
-wp option update siteurl "${SITE_URL}/${WP_FOLDER_NAME}" --path="${WP_FOLDER_NAME}/"
+#echo "Reset home urls"
+#cd "${SITE_DIR}"
+#wp option update home "${SITE_URL}" # --path="${WP_FOLDER_NAME}/"
+#wp option update siteurl "${SITE_URL}/${WP_FOLDER_NAME}" # --path="${WP_FOLDER_NAME}/"

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 SITE_DIR="${1}"
 SFTP_SERVER="${2}"
 SFTP_USER="${3}"
