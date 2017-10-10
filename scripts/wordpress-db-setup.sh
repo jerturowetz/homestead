@@ -48,6 +48,6 @@ else
 fi
 
 #echo "Reset home urls"
-#cd "${SITE_DIR}"
-#wp option update home "${SITE_URL}" # --path="${WP_FOLDER_NAME}/"
-#wp option update siteurl "${SITE_URL}/${WP_FOLDER_NAME}" # --path="${WP_FOLDER_NAME}/"
+cd "${SITE_DIR}"
+wp option update home "${SITE_URL}"
+wp option update siteurl "${SITE_URL}/${WP_FOLDER_NAME}"
