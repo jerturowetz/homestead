@@ -7,9 +7,11 @@ WP_FOLDER_NAME="${4}"
 
 WP_DIR="${SITE_DIR}/${WP_FOLDER_NAME}"
 
-if [[ ! -f "${WP_DIR}/wp-load.php" ]]; then
+if [[ ! -f "${WP_DIR}/wp-load.php" ]];
+then
 
-	if [[ ! -d "${WP_DIR}" ]]; then
+	if [[ ! -d "${WP_DIR}" ]];
+    then
 		mkdir "${WP_DIR}"
 	else
 		rm -rf "${WP_DIR}"
