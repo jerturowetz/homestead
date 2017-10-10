@@ -78,6 +78,7 @@ class Homestead
             80 => 8000,
             443 => 44300,
             3306 => 33060,
+            4040 => 4040,
             5432 => 54320,
             8025 => 8025,
             27017 => 27017
@@ -349,6 +350,14 @@ class Homestead
             end
         end
 
+        # Add config file for ngrok
+        config.vm.provision "shell" do |s|
+            s.path = scriptDir + "/create-ngrok.sh"
+            s.args = [settings["ip"]]
+            s.privileged = false
+        end
+
+        # jer's wordpress items
         require File.expand_path(File.dirname(__FILE__) + '/homestead-extra.rb')
         HomesteadExtra.run(config,settings)
 
