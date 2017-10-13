@@ -13,13 +13,9 @@ then
 	if [[ ! -d "${WP_DIR}" ]];
     then
 		mkdir "${WP_DIR}"
-	else
-		rm -rf "${WP_DIR}"
-		mkdir "${WP_DIR}"
+        cd "${SITE_DIR}"
+	    wp core download --version="latest" --path="${WP_FOLDER_NAME}/"
 	fi
-
-    cd "${SITE_DIR}"
-	wp core download --version="latest" --path="${WP_FOLDER_NAME}/"
 
     cd "${SITE_DIR}"
     wp config create --dbuser=homestead --dbname="${DB_NAME}" --dbpass=secret --dbhost='127.0.0.1' --force --path="${WP_FOLDER_NAME}/" --extra-php <<PHP
@@ -49,4 +45,3 @@ PHP
     sed -i "s/\/wp-blog-header/\/${WP_FOLDER_NAME}\/wp-blog-header/g" "${SITE_DIR}/index.php"
 
 fi
-
