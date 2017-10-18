@@ -41,6 +41,13 @@ class HomesteadExtra
                     end
 
                     config.vm.provision "shell" do |s|
+                        s.name =  localSiteURL + ": Generating wp-config.php & index.php"
+                        s.privileged = false
+                        s.path = scriptDir + "/wordpress-config-create.sh"
+                        s.args = [localSiteFolder, localDBName, localSiteURL, localWordpressFolder]
+                    end
+
+                    config.vm.provision "shell" do |s|
                         s.name =  localSiteURL + ": Setting up Wordpress database"
                         s.privileged = false
                         s.path = scriptDir + "/wordpress-db-setup.sh"
