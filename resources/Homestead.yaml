@@ -13,48 +13,29 @@ folders:
       to: /home/vagrant/sites
 
 databases:
-    - db name
-
-# blackfire:
-#     - id: foo
-#       token: bar
-#       client-id: foo
-#       client-token: bar
-
-# ports:
-#     - send: 50000
-#       to: 5000
-#     - send: 7777
-#       to: 777
-#       protocol: udp
+    - somesite
 
 sites:
-    - map: site.dev
-      to: /home/vagrant/sites/folder
-      db: database to use from supplied databases above
+    - map: somesite.dev
+      to: /home/vagrant/sites/somesite
+      db: somesite
+      wordpress-folder: wordpress
 
       run-local-script:
-        - local-path: ~/sites/folder
+        - local-path: ~/sites/somesite
           command: composer install
-        - local-path: ~/sites/folder
+        - local-path: ~/sites/somesite
           command: yarn install
       
-      wordpress:
-          install-to-folder: wordpress
-
       wpengine-db-copy:
-          install-name: wp engine install name
-          dbpass: remote db pass
+          install-name: somesite
+          dbpass: somepass
 
       db-search-replace:
-        - find: https://www.oldurl.com
-          replace-with: http://newurl.dev
+        - find: http://www.somesite.com
+          replace-with: http://somesite.dev
 
       wpengine-copy-uploads-folder:
-          sftpaddress: sftp server
-          sftpuser: sftp user
-          sftppass: sftp pass
-
-      aws-s3-copy:
-          id: ID here
-          secret: pass here
+          sftpaddress: somesite.sftp.wpengine.com
+          sftpuser: somesite-sftpuser
+          sftppass: somesite-sftppass
