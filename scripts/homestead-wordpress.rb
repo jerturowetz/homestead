@@ -80,16 +80,16 @@ class HomesteadExtra
                         s.args = [localSiteFolder, localSiteURL, localWordpressFolder]
                     end
 
-                    if site.include? 'wpengine-copy-uploads-folder'
+                    if site.include? 'sftp-copy-uploads-folder'
 
-                        sftpServer = site['wpengine-copy-uploads-folder']['sftpaddress']
-                        sftpUser = site['wpengine-copy-uploads-folder']['sftpuser']
-                        sftpPass = site['wpengine-copy-uploads-folder']['sftppass']
+                        sftpServer = site['sftp-copy-uploads-folder']['server']
+                        sftpUser = site['sftp-copy-uploads-folder']['user']
+                        sftpPass = site['sftp-copy-uploads-folder']['pass']
 
                         config.vm.provision "shell" do |s|
                             s.name = localSiteURL + ": Copying uploads folder from WP-Engine"
                             s.privileged = false
-                            s.path = scriptDir + "/wpengine-copy-uploads-folder.sh"
+                            s.path = scriptDir + "/sftp-copy-uploads-folder.sh"
                             s.args = [localSiteFolder, sftpServer, sftpUser, sftpPass]
                         end
                     end
