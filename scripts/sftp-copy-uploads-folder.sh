@@ -17,9 +17,9 @@ then
 fi
 
 cd ${UPLOADS_DIR}
-export SSHPASS=EJ69jSpAndmOTpeB
+export SSHPASS=${SFTP_PASS}
 
-sshpass -e sftp -oPort=2222 -o StrictHostKeyChecking=no shaktigym-provision@shaktigym.sftp.wpengine.com:/wp-content/uploads <<EOF
+sshpass -e sftp -oPort=2222 -o StrictHostKeyChecking=no "${SFTP_USER}@${SFTP_SERVER}:/wp-content/uploads" <<EOF
 echo "copying contents of WP Engine wp-content/uploads folder, this can take a minute"
 get -r *
 exit
