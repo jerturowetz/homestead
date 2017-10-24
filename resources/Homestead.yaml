@@ -35,7 +35,7 @@ sites:
         - find: http://www.somesite.com
           replace-with: http://somesite.dev
 
-      wpengine-copy-uploads-folder:
-          sftpaddress: somesite.sftp.wpengine.com
-          sftpuser: somesite-sftpuser
-          sftppass: somesite-sftppass
+      sftp-copy-uploads-folder:
+          server: somesite.sftp.wpengine.com
+          user: somesite-provision
+          pass: somesite-sftp-pass
