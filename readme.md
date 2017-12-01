@@ -6,7 +6,11 @@ This project attempts to address issues of stability on Windows 10 with Vagrants
 
 Because Homestead is so awesome already, this project doesn't mean to improve upon it. From Homesteads official `readme.md`:
 
+<<<<<<< HEAD
 > Homestead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.1, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing Laravel applications.
+=======
+Homestead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.2, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing Laravel applications.
+>>>>>>> upstream/master
 
 To learn how homestead works & for all homestead related issues, you should check out the [official docs](https://laravel.com/docs/homestead).
 

@@ -42,6 +42,11 @@ class Homestead
             end
         end
 
+        # Override Default SSH port on the host
+        if (settings.has_key?("default_ssh_port"))
+            config.vm.network :forwarded_port, guest: 22, host: settings["default_ssh_port"], auto_correct: false, id: "ssh"
+        end
+
         # Configure A Few VMware Settings
         ["vmware_fusion", "vmware_workstation"].each do |vmware|
             config.vm.provider vmware do |v|
@@ -204,7 +209,7 @@ class Homestead
                         params += " )"
                     end
                     s.path = scriptDir + "/serve-#{type}.sh"
-                    s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443", site["php"] ||= "7.1", params ||= ""]
+                    s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443", site["php"] ||= "7.2", params ||= ""]
                 end
 
                 # Configure The Cron Schedule
@@ -229,6 +234,11 @@ class Homestead
                 end
             end
 
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Restarting Cron"
+            s.inline = "sudo service cron restart"
         end
 
         config.vm.provision "shell" do |s|
