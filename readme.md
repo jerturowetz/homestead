@@ -39,3 +39,4 @@ sftp & aws & db passwords cannot contain bangs or special chars
 
 finish aws s3 copy
 finish wp set permissions
+so homestead's composer update will break provisioning if no internet connection
