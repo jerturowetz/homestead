@@ -236,77 +236,6 @@ class Homestead
 
         end
 
-        config.vm.provision "shell" do |s|
-            s.name = "Restarting Cron"
-            s.inline = "sudo service cron restart"
-        end
-
-        config.vm.provision "shell" do |s|
-            s.name = "Restarting Nginx"
-            s.inline = "sudo service nginx restart; sudo service php5.6-fpm restart; sudo service php7.0-fpm restart; sudo service php7.1-fpm restart; sudo service php7.2-fpm restart"
-        end
-
-        # Install MariaDB If Necessary
-        if settings.has_key?("mariadb") && settings["mariadb"]
-            config.vm.provision "shell" do |s|
-                s.path = scriptDir + "/install-maria.sh"
-            end
-        end
-
-        # Install MongoDB If Necessary
-        if settings.has_key?("mongodb") && settings["mongodb"]
-            config.vm.provision "shell" do |s|
-                s.path = scriptDir + "/install-mongo.sh"
-            end
-        end
-
-        # Install CouchDB If Necessary
-        if settings.has_key?("couchdb") && settings["couchdb"]
-            config.vm.provision "shell" do |s|
-                s.path = scriptDir + "/install-couch.sh"
-            end
-        end
-
-        # Install Elasticsearch If Necessary
-        if settings.has_key?("elasticsearch") && settings["elasticsearch"]
-            config.vm.provision "shell" do |s|
-                s.path = scriptDir + "/install-elasticsearch.sh"
-            end
-        end
-
-        # Configure All Of The Configured Databases
-        if settings.has_key?("databases")
-            settings["databases"].each do |db|
-                config.vm.provision "shell" do |s|
-                    s.name = "Creating MySQL Database: " + db
-                    s.path = scriptDir + "/create-mysql.sh"
-                    s.args = [db]
-                end
-
-                config.vm.provision "shell" do |s|
-                    s.name = "Creating Postgres Database: " + db
-                    s.path = scriptDir + "/create-postgres.sh"
-                    s.args = [db]
-                end
-
-                if settings.has_key?("mongodb") && settings["mongodb"]
-                    config.vm.provision "shell" do |s|
-                        s.name = "Creating Mongo Database: " + db
-                        s.path = scriptDir + "/create-mongo.sh"
-                        s.args = [db]
-                    end
-                end
-
-                if settings.has_key?("couchdb") && settings["couchdb"]
-                    config.vm.provision "shell" do |s|
-                        s.name = "Creating Couch Database: " + db
-                        s.path = scriptDir + "/create-couch.sh"
-                        s.args = [db]
-                    end
-                end
-            end
-        end
-
         # Configure All Of The Server Environment Variables
         config.vm.provision "shell" do |s|
             s.name = "Clear Variables"
@@ -343,6 +272,82 @@ class Homestead
 
             config.vm.provision "shell" do |s|
                 s.inline = "service php5.6-fpm restart; service php7.0-fpm restart; service php7.1-fpm restart; service php7.2-fpm restart;"
+            end
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Restarting Cron"
+            s.inline = "sudo service cron restart"
+        end
+
+        config.vm.provision "shell" do |s|
+            s.name = "Restarting Nginx"
+            s.inline = "sudo service nginx restart; sudo service php5.6-fpm restart; sudo service php7.0-fpm restart; sudo service php7.1-fpm restart; sudo service php7.2-fpm restart"
+        end
+
+        # Install MariaDB If Necessary
+        if settings.has_key?("mariadb") && settings["mariadb"]
+            config.vm.provision "shell" do |s|
+                s.path = scriptDir + "/install-maria.sh"
+            end
+        end
+
+        # Install MongoDB If Necessary
+        if settings.has_key?("mongodb") && settings["mongodb"]
+            config.vm.provision "shell" do |s|
+                s.path = scriptDir + "/install-mongo.sh"
+            end
+        end
+
+        # Install CouchDB If Necessary
+        if settings.has_key?("couchdb") && settings["couchdb"]
+            config.vm.provision "shell" do |s|
+                s.path = scriptDir + "/install-couch.sh"
+            end
+        end
+
+        # Install Elasticsearch If Necessary
+        if settings.has_key?("elasticsearch") && settings["elasticsearch"]
+            config.vm.provision "shell" do |s|
+                s.name = "Installing Elasticsearch"
+                if settings["elasticsearch"] == 6
+                    s.path = scriptDir + "/install-elasticsearch6.sh"
+                else
+                    s.path = scriptDir + "/install-elasticsearch5.sh"
+                end
+            end
+        end
+
+        # Configure All Of The Configured Databases
+        if settings.has_key?("databases")
+            settings["databases"].each do |db|
+                config.vm.provision "shell" do |s|
+                    s.name = "Creating MySQL Database: " + db
+                    s.path = scriptDir + "/create-mysql.sh"
+                    s.args = [db]
+                end
+
+                config.vm.provision "shell" do |s|
+                    s.name = "Creating Postgres Database: " + db
+                    s.path = scriptDir + "/create-postgres.sh"
+                    s.args = [db]
+                end
+
+                if settings.has_key?("mongodb") && settings["mongodb"]
+                    config.vm.provision "shell" do |s|
+                        s.name = "Creating Mongo Database: " + db
+                        s.path = scriptDir + "/create-mongo.sh"
+                        s.args = [db]
+                    end
+                end
+
+                if settings.has_key?("couchdb") && settings["couchdb"]
+                    config.vm.provision "shell" do |s|
+                        s.name = "Creating Couch Database: " + db
+                        s.path = scriptDir + "/create-couch.sh"
+                        s.args = [db]
+                    end
+                end
             end
         end
 
