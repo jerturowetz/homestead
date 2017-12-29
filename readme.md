@@ -26,6 +26,7 @@ to-do
 ## Quick start
 
 to-do
+**Make sure you edit /etc/nginx/nginx.conf and set "sendfile" to off if using NFS or you will run into weird caching issues.**
 
 ## Contributors
 
