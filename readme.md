@@ -21,6 +21,12 @@ tests removed
 
 You should have a fair understanding of vagrant (booted machines), homestead (booted homestead) and...
 
+There are a few vagrant plugins you'll need as well:
+
+vagrant plugin install vagrant-hostsupdater vagrant-triggers vagrant-aws vagrant-host-shell vagrant-winnfsd
+
+I'm unsure about aws & host-shell but the rest are required
+
 to-do
 
 ## Quick start
