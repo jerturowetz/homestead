@@ -47,3 +47,4 @@ sftp & aws & db passwords cannot contain bangs or special chars
 finish aws s3 copy
 finish wp set permissions
 so homestead's composer update will break provisioning if no internet connection
+If table prefix is not normal - this will all get super fucked up (which honestly, is fine, as I'd rather the normal prefix but better security)

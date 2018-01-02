@@ -19,28 +19,26 @@ REMOTE_DB_USER="${WP_ENGINE_INSTALL_NAME}"
 REMOTE_DB_PASS="${6}"
 
 
-echo "Write a function to check if network connection is available as the mysql remote check returns an error (which i guess is fine, just ugly)"
 if (( $# == 6 )) && mysql -u "${REMOTE_DB_USER}" -p"${REMOTE_DB_PASS}" -h "${REMOTE_DB_URL}" "${REMOTE_DB_NAME}" -e ";" ;
 then
-    echo "dumpig database from prod to local site folder"
+    echo "Mysql connection looks good :: dumping database from prod to local site folder"
     mysqldump -u ${REMOTE_DB_USER} -p${REMOTE_DB_PASS} -h ${REMOTE_DB_URL} ${REMOTE_DB_NAME} > "${SITE_DIR}/mysql.sql"
 fi
 
 
 if [ -f "${SITE_DIR}/mysql.sql" ];
 then
-    echo "Copying mysql.sql found in site folder to dump file"
+    echo "mysql.sql found in site folder: copying to dump file"
     cp "${SITE_DIR}/mysql.sql" dump.sql
-    break
 fi
-
 
 if [ -f "dump.sql" ];
 then
-    echo "found dump file, importing and erasing"
+    echo "found dump.sql file, going to drop current db and import dump file"
     mysqladmin drop ${LOCAL_DB_NAME} -f
     mysqladmin create ${LOCAL_DB_NAME}
-    mysql ${LOCAL_DB_NAME} < dump.sql
+    mysql ${LOCAL_DB_NAME} < dump.sql --binary-mode
+    echo "erasing dump file so it wont screw up the next install"
     rm dump.sql
 else
     echo "install wp db from scratch - migh cause errors if db doesn't exist? dropping is important if db doesn exist"
