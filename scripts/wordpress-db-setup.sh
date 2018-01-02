@@ -37,7 +37,7 @@ then
     echo "found dump.sql file, going to drop current db and import dump file"
     mysqladmin drop ${LOCAL_DB_NAME} -f
     mysqladmin create ${LOCAL_DB_NAME}
-    mysql ${LOCAL_DB_NAME} < dump.sql --binary-mode
+    mysql ${LOCAL_DB_NAME} < dump.sql
     echo "erasing dump file so it wont screw up the next install"
     rm dump.sql
 else
