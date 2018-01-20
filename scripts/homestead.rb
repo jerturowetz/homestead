@@ -162,40 +162,23 @@ class Homestead
                 id: folder["map"],
                 :nfs => true,
                 :mount_options => ['nolock,vers=3,udp,noatime']
+
+                # Bindfs support to fix shared folder (NFS) permission issue on Mac
+                if (folder["type"] == "nfs")
+                    if Vagrant.has_plugin?("vagrant-bindfs")
+                        config.bindfs.bind_folder folder["to"], folder["to"]
+                    end
+                end
+                
             end
+
+        else
+
+            config.vm.provision "shell" do |s|
+                s.inline = ">&2 echo \"Unable to mount one of your folders. Please check your folders in Homestead.yaml\""
+            end
+
         end
-
-        # OLD CODE: 
-        # if settings.include? 'folders'
-        #     settings["folders"].each do |folder|
-        #         if File.exists? File.expand_path(folder["map"])
-        #             mount_opts = []
-
-        #             if (folder["type"] == "nfs")
-        #                 mount_opts = folder["mount_options"] ? folder["mount_options"] : ['actimeo=1', 'nolock']
-        #             elsif (folder["type"] == "smb")
-        #                 mount_opts = folder["mount_options"] ? folder["mount_options"] : ['vers=3.02', 'mfsymlinks']
-        #             end
-
-        #             # For b/w compatibility keep separate 'mount_opts', but merge with options
-        #             options = (folder["options"] || {}).merge({ mount_options: mount_opts })
-
-        #             # Double-splat (**) operator only works with symbol keys, so convert
-        #             options.keys.each{|k| options[k.to_sym] = options.delete(k) }
-
-        #             config.vm.synced_folder folder["map"], folder["to"], type: folder["type"] ||= nil, **options
-
-        #             # Bindfs support to fix shared folder (NFS) permission issue on Mac
-        #             if Vagrant.has_plugin?("vagrant-bindfs")
-        #                 config.bindfs.bind_folder folder["to"], folder["to"]
-        #             end
-        #         else
-        #             config.vm.provision "shell" do |s|
-        #                 s.inline = ">&2 echo \"Unable to mount one of your folders. Please check your folders in Homestead.yaml\""
-        #             end
-        #         end
-        #     end
-        # end
 
         # Install All The Configured Nginx Sites
         config.vm.provision "shell" do |s|
@@ -228,7 +211,17 @@ class Homestead
                         params += " )"
                     end
                     s.path = scriptDir + "/serve-#{type}.sh"
-                    s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443", site["php"] ||= "7.2", params ||= ""]
+                    s.args = [site["map"], site["to"], site["port"] ||= "80", site["ssl"] ||= "443", site["php"] ||= "7.2", params ||= "", site["zray"] ||= "false"]
+
+                    if site["zray"] == 'true'
+                        config.vm.provision "shell" do |s|
+                            s.inline = "ln -sf /opt/zray/gui/public " + site["to"] + "/ZendServer"
+                        end
+                    else
+                        config.vm.provision "shell" do |s|
+                            s.inline = "rm -rf " + site["to"] + "/ZendServer"
+                        end
+                    end
                 end
 
                 # Configure The Cron Schedule
@@ -373,7 +366,7 @@ class Homestead
         # Update Composer On Every Provision
         config.vm.provision "shell" do |s|
             s.name = "Update Composer"
-            s.inline = "sudo /usr/local/bin/composer self-update && sudo chown -R vagrant:vagrant /home/vagrant/.composer/"
+            s.inline = "sudo /usr/local/bin/composer self-update --no-progress && sudo chown -R vagrant:vagrant /home/vagrant/.composer/"
             s.privileged = false
         end
 
