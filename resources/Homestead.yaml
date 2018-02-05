@@ -13,29 +13,39 @@ folders:
       to: /home/vagrant/sites
 
 databases:
-    - somesite
+    - someproject
+    - somewordpresssite
 
 sites:
-    - map: somesite.dev
-      to: /home/vagrant/sites/somesite
-      db: somesite
+
+    - map: someproject.local
+      to: /home/vagrant/sites/someproject
+      db: someproject
+      php: "5.6"
+
+    - map: somewordpresssite.local
+      to: /home/vagrant/sites/somewordpresssite
+      db: somewordpresssite
+      php: "7.0"
       wordpress-folder: wordpress
 
-      run-local-script:
-        - local-path: ~/sites/somesite
-          command: composer install
-        - local-path: ~/sites/somesite
-          command: yarn install
-      
-      wpengine-db-copy:
-          install-name: somesite
-          dbpass: somepass
+    #   run-local-script:
+    #     - local-path: ~/sites/somewordpresssite
+    #       command: composer update
+    #     - local-path: ~/sites/somewordpresssite
+    #       command: yarn install
 
-      db-search-replace:
-        - find: http://www.somesite.com
-          replace-with: http://somesite.dev
+    # # You gotta chat with WP Engine to add your IP to the whitelist to access the DB server remotely
+    # # Fortunately, you can just do this stuff manually by placing a mysql.sql file in the site's root folder
+    #   wpengine-db-copy:
+    #       install-name: somewpengineinstallname
+    #       dbpass: somedbpass
 
-      sftp-copy-uploads-folder:
-          server: somesite.sftp.wpengine.com
-          user: somesite-provision
-          pass: somesite-sftp-pass
+    #   db-search-replace:
+    #     - find: http://www.actualurl.com
+    #       replace-with: http://localurl.local
+
+    #   sftp-copy-uploads-folder:
+    #       server: somesite.sftp.wpengine.com
+    #       user: sftpuser
+    #       pass: somesftppass

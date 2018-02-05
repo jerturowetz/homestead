@@ -6,7 +6,7 @@ This project attempts to address issues of stability on Windows 10 with Vagrants
 
 Because Homestead is so awesome already, this project doesn't mean to improve upon it. From Homesteads official `readme.md`:
 
-> Homestead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.1, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing Laravel applications.
+Homestead runs on any Windows, Mac, or Linux system, and includes the Nginx web server, PHP 7.2, MySQL, Postgres, Redis, Memcached, Node, and all of the other goodies you need to develop amazing Laravel applications.
 
 To learn how homestead works & for all homestead related issues, you should check out the [official docs](https://laravel.com/docs/homestead).
 
@@ -21,11 +21,18 @@ tests removed
 
 You should have a fair understanding of vagrant (booted machines), homestead (booted homestead) and...
 
+There are a few vagrant plugins you'll need as well:
+
+vagrant plugin install vagrant-hostsupdater vagrant-triggers vagrant-aws vagrant-host-shell vagrant-winnfsd
+
+I'm unsure about aws & host-shell but the rest are required
+
 to-do
 
 ## Quick start
 
 to-do
+**Make sure you edit /etc/nginx/nginx.conf and set "sendfile" to off if using NFS or you will run into weird caching issues.**
 
 ## Contributors
 
@@ -39,3 +46,5 @@ sftp & aws & db passwords cannot contain bangs or special chars
 
 finish aws s3 copy
 finish wp set permissions
+so homestead's composer update will break provisioning if no internet connection
+If table prefix is not normal - this will all get super fucked up (which honestly, is fine, as I'd rather the normal prefix but better security)
