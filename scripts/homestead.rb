@@ -12,7 +12,7 @@ class Homestead
         # Configure The Box
         config.vm.define settings["name"] ||= "homestead-7"
         config.vm.box = settings["box"] ||= "laravel/homestead"
-        config.vm.box_version = settings["version"] ||= ">= 4.0.0"
+        config.vm.box_version = settings["version"] ||= ">= 5.2.0"
         config.vm.hostname = settings["hostname"] ||= "homestead"
 
         # Configure A Private Network IP
@@ -318,6 +318,13 @@ class Homestead
             end
         end
 
+        # Install Minio If Necessary
+        if settings.has_key?("minio") && settings["minio"]
+            config.vm.provision "shell" do |s|
+                s.path = scriptDir + "/install-minio.sh"
+            end
+        end
+        
         # Install MongoDB If Necessary
         if settings.has_key?("mongodb") && settings["mongodb"]
             config.vm.provision "shell" do |s|
@@ -336,11 +343,8 @@ class Homestead
         if settings.has_key?("elasticsearch") && settings["elasticsearch"]
             config.vm.provision "shell" do |s|
                 s.name = "Installing Elasticsearch"
-                if settings["elasticsearch"] == 6
-                    s.path = scriptDir + "/install-elasticsearch6.sh"
-                else
-                    s.path = scriptDir + "/install-elasticsearch5.sh"
-                end
+                s.path = scriptDir + "/install-elasticsearch.sh"
+                s.args = settings["elasticsearch"]
             end
         end
 
