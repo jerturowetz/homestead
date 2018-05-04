@@ -1,6 +1,6 @@
 # WP-Homestead
 
-This project attempts to address issues of stability on Windows 10 with Vagrants built for Wordpress developers. It's nothing more than a few extra provisioning scripts built on top of Laravel's very stable and beautifully performant Vagrant [_Homestead_](https://laravel.com/docs/homestead).
+This is a fork of Laravel's very stable and beautifully performant Vagrant [_Homestead_](https://laravel.com/docs/homestead) with a couple of scripts added for Wordpress things.
 
 ## About Homestead
 
@@ -19,32 +19,31 @@ tests removed
 
 ## Requirements
 
-You should have a fair understanding of vagrant (booted machines), homestead (booted homestead) and...
+Virtualbox, vagrant and the following vagrant plugins
 
-There are a few vagrant plugins you'll need as well:
+    vagrant plugin install vagrant-triggers vagrant-hostsupdater
 
-vagrant plugin install vagrant-hostsupdater vagrant-triggers vagrant-aws vagrant-host-shell vagrant-winnfsd
+Also wouldn't hurt to add the box in advance (optional):
 
-I'm unsure about aws & host-shell but the rest are required
-
-to-do
+    vagrant box add laravel/homestead
 
 ## Quick start
 
-to-do
-**Make sure you edit /etc/nginx/nginx.conf and set "sendfile" to off if using NFS or you will run into weird caching issues.**
-
-## Contributors
-
-to-do
+- Download or clone this repo
+- Run `composer update` for deps
+- Run `bash init.sh` to initialize some defaults
+- Set up `homestead.yml` with your project details
+- Run `vagrant up --provision`
 
 ## Notes
+
+Make sure you edit /etc/nginx/nginx.conf and set "sendfile" to off if using NFS or you will run into weird caching issues.
 
 sftp & aws & db passwords cannot contain bangs or special chars
 
 ## ToDo
 
-finish aws s3 copy
-finish wp set permissions
-so homestead's composer update will break provisioning if no internet connection
-If table prefix is not normal - this will all get super fucked up (which honestly, is fine, as I'd rather the normal prefix but better security)
+- finish wp set permissions
+- so homestead's composer update will break provisioning if no internet connection
+- If table prefix is not normal - this will all get super fucked up (which might be fine as I'd rather the normal prefix but better security)
+- Can add bash alias for homestead
