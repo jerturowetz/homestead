@@ -1,10 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 
-# Update apt-get
-#echo "Updating apt-get"
-#sudo DEBIAN_FRONTEND=noninteractive apt-get --assume-yes update
-
-# Install phpX.X-ldap
-#echo "Installing phpX.X-ldap (matches current php version)"
-#PHPVersion=$(php --version | head -n 1 | cut -d " " -f 2 | cut -c 1,2,3);
-#sudo DEBIAN_FRONTEND=noninteractive apt-get --assume-yes install php${PHPVersion}-ldap
+# If you would like to do some extra provisioning you may
+# add any commands you wish to this file and they will
+# be run after the Homestead machine is provisioned.

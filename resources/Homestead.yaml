@@ -3,49 +3,32 @@ ip: "192.168.10.10"
 memory: 2048
 cpus: 1
 provider: virtualbox
+
 authorize: ~/.ssh/id_rsa.pub
 
 keys:
     - ~/.ssh/id_rsa
 
 folders:
-    - map: ~/sites
-      to: /home/vagrant/sites
-
-databases:
-    - someproject
-    - somewordpresssite
+    - map: ~/code
+      to: /home/vagrant/code
 
 sites:
+    - map: homestead.test
+      to: /home/vagrant/code/public
 
-    - map: someproject.local
-      to: /home/vagrant/sites/someproject
-      db: someproject
-      php: "5.6"
+databases:
+    - homestead
 
-    - map: somewordpresssite.local
-      to: /home/vagrant/sites/somewordpresssite
-      db: somewordpresssite
-      php: "7.0"
-      wordpress-folder: wordpress
+# blackfire:
+#     - id: foo
+#       token: bar
+#       client-id: foo
+#       client-token: bar
 
-    #   run-local-script:
-    #     - local-path: ~/sites/somewordpresssite
-    #       command: composer update
-    #     - local-path: ~/sites/somewordpresssite
-    #       command: yarn install
-
-    # # You gotta chat with WP Engine to add your IP to the whitelist to access the DB server remotely
-    # # Fortunately, you can just do this stuff manually by placing a mysql.sql file in the site's root folder
-    #   wpengine-db-copy:
-    #       install-name: somewpengineinstallname
-    #       dbpass: somedbpass
-
-    #   db-search-replace:
-    #     - find: http://www.actualurl.com
-    #       replace-with: http://localurl.local
-
-    #   sftp-copy-uploads-folder:
-    #       server: somesite.sftp.wpengine.com
-    #       user: sftpuser
-    #       pass: somesftppass
+# ports:
+#     - send: 50000
+#       to: 5000
+#     - send: 7777
+#       to: 777
+#       protocol: udp
