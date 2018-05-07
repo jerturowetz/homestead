@@ -20,7 +20,8 @@ class HomesteadExtra
                     site["run-local-script"].each do |script|
                         if script["local-path"] && script["command"]
                             config.trigger.before :up do
-                                run "bash #{scriptDir}/run-local-script.sh '" + script["local-path"] + "' '" + script["command"] + "'"
+                                # Vagrant triggers is OLD AS F and the below is now incompatible
+                                # run "bash #{scriptDir}/run-local-script.sh '" + script["local-path"] + "' '" + script["command"] + "'"
                             end
                         end
                     end
